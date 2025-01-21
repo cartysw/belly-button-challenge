@@ -15,6 +15,7 @@ function buildMetadata(sample) {
     // tags for each key-value in the filtered metadata.
     Object.entries(filteredSample),forEach(([key, value]) => {
       sampleMetadata.append('h4').text(`${key}: ${value}`);
+      
     });
   });
 }
@@ -24,28 +25,65 @@ function buildCharts(sample) {
   d3.json("https://static.bc-edx.com/data/dl-1-2/m14/lms/starter/samples.json").then((data) => {
 
     // Get the samples field
-
+    let samples = data.samples;
 
     // Filter the samples for the object with the desired sample number
-
+    let filteredSample = samples.filter(sample => sample.id === sample);
 
     // Get the otu_ids, otu_labels, and sample_values
-
+    let otuIDs = filteredSample.otu_ids;
+    let otuLabels = filteredSample.otu_labels;
+    let sampleValues = filteredSample.sample_values;
 
     // Build a Bubble Chart
+    // Bubble Chart Trace
+    let bubbleTrace = {
+      x: otuIDs,
+      y: sampleValues,
+      text: otuLabels,
+      mode: 'markers',
+      marker: {
+        size: sampleValues,
+        color: otuIDs,
+        colorscale: 'Earth'
+      }
+    };
 
+    // Bubble Chart Data Trace Array
+    let bubbleData = [bubbleTrace];
+
+    // Bubble Chart Layout
+    let bubbleLayout = {
+      title: 'Bacteria Cultures Per Sample'
+    };
 
     // Render the Bubble Chart
-
+    Plotly.newPlot('bubble', bubbleData, bubbleLayout);
 
     // For the Bar Chart, map the otu_ids to a list of strings for your yticks
-
+    let barYTicks = otuIDs.slice(0, 10).map(id => `OTU ${id}`);
 
     // Build a Bar Chart
     // Don't forget to slice and reverse the input data appropriately
+    // Bar Chart Trace
+    let barTrace = {
+      x: sampleValues.slice(0, 10).reverse(),
+      y: barYTicks.reverse(),
+      text: otuLabels.slice(0, 10).reverse(),
+      type: 'bar',
+      orientation: 'h'
+    };
 
+    // Bar Chart Data Trace Array
+    let barData = [barTrace];
+
+    // Bar Chart Layout
+    let barLayout = {
+      title: 'Top 10 Bacteria Cultures Found'
+    };
 
     // Render the Bar Chart
+    Plotly.newPlot('bar', barTrace, barLayout);
 
   });
 }
