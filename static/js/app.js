@@ -6,7 +6,7 @@ function buildMetadata(sample) {
     let metadata = data.metadata;
 
     // Filter the metadata for the object with the desired sample number
-    let filteredSample = metadata.filter(id => id.id === sample);
+    let filteredSample = metadata.find(m => m.id == sample);
 
     // Use d3 to select the panel with id of `#sample-metadata` and use `.html("") to clear any existing metadata
     let sampleMetadata = d3.select('#sample-metadata').html("");
@@ -15,7 +15,6 @@ function buildMetadata(sample) {
     // tags for each key-value in the filtered metadata.
     Object.entries(filteredSample).forEach(([key, value]) => {
       sampleMetadata.append('h4').text(`${key}: ${value}`);
-
     });
   });
 }
@@ -28,7 +27,7 @@ function buildCharts(sample) {
     let samples = data.samples;
 
     // Filter the samples for the object with the desired sample number
-    let filteredSample = samples.filter(sample => sample.id === sample);
+    let filteredSample = samples.find(s => s.id === sample);
 
     // Get the otu_ids, otu_labels, and sample_values
     let otuIDs = filteredSample.otu_ids;
@@ -54,7 +53,15 @@ function buildCharts(sample) {
 
     // Bubble Chart Layout
     let bubbleLayout = {
-      title: 'Bacteria Cultures Per Sample'
+      title: 'Bacteria Cultures Per Sample',
+      height: 600,
+      width: 1300,
+      xaxis: {
+        title: 'OTU ID'
+      },
+      yaxis: {
+        title: 'Number of Bacteria'
+      }
     };
 
     // Render the Bubble Chart
@@ -79,11 +86,14 @@ function buildCharts(sample) {
 
     // Bar Chart Layout
     let barLayout = {
-      title: 'Top 10 Bacteria Cultures Found'
+      title: 'Top 10 Bacteria Cultures Found',
+      xaxis: {
+        title: 'Number of Bacteria'
+      }
     };
 
     // Render the Bar Chart
-    Plotly.newPlot('bar', barTrace, barLayout);
+    Plotly.newPlot('bar', barData, barLayout);
 
   });
 }
@@ -111,14 +121,15 @@ function init() {
     // Build charts and metadata panel with the first sample
     buildCharts(firstSample);
     buildMetadata(firstSample);
-    
+
   });
 }
 
 // Function for event listener
 function optionChanged(newSample) {
   // Build charts and metadata panel each time a new sample is selected
-
+  buildCharts(newSample);
+  buildMetadata(newSample);
 }
 
 // Initialize the dashboard
