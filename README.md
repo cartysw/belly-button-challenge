@@ -18,6 +18,7 @@ Program Instructions:
   - Open project in Visual Studio Code (this is the program that was used to develop this project. if you have another one that has that same capabilities then that should also work.)
   - Run the HTML file called "index" using Visual Studio Code's Live Server add-on
   - View initial page results and/or choose various subject IDs from the dropdown list at your discretion
+  - If you would like to open this project on a Github Pages web server, simply enter "cartysw.github.io/belly-button-challenge" into your web browser's search bar
 
 I hope the analysis provided here proves to be helpful and insightful.
 
